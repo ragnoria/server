@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Models\Player;
 
 class World
 {
@@ -19,6 +20,48 @@ class World
     public static function getSQM(int $x, int $y, int $z): ?SQM
     {
         return self::$grid[$z][$y][$x] ?? null;
+    }
+
+    /**
+     * @return SQM[] (does not include from & to SQMs)
+     */
+    public static function getSQMsBetween(SQM $fromSQM, SQM $toSQM): array
+    {
+        $result = [];
+        $fields = MiscHelper::getFieldsBetween(
+            ['X' => $fromSQM->x, 'Y' => $fromSQM->y],
+            ['X' => $toSQM->x, 'Y' => $toSQM->y]
+        );
+        foreach ($fields as $y => $row) {
+            foreach ($row as $x => $tile) {
+                if (self::getSQM($x, $y, $fromSQM->z)) {
+                    $result[] = self::getSQM($x, $y, $fromSQM->z);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return Player[]
+     */
+    public static function getPlayersAround(SQM $sqm): array
+    {
+        $players = [];
+
+        $factor_x = ceil(env('GAME_CLIENT_SQM_WIDTH') / 2) - 1;
+        $factor_y = ceil(env('GAME_CLIENT_SQM_HEIGHT') / 2) - 1;
+        $range_x = range(($sqm->x - $factor_x), ($sqm->x + $factor_x));
+        $range_y = range(($sqm->y - $factor_y), ($sqm->y + $factor_y));
+
+        foreach (self::$players as $player) {
+            if (in_array($player->x, $range_x) && in_array($player->y, $range_y)) {
+                $players[] = $player;
+            }
+        }
+
+        return $players;
     }
 
 

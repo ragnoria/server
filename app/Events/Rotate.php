@@ -6,7 +6,7 @@ use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Walk
+class Rotate
 {
     use Dispatchable;
 

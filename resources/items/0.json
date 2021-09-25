@@ -7,7 +7,7 @@
     "is_animating": false,
     "is_blocking_creatures": false,
     "is_blocking_projectiles": false,
-    "is_blocking_items": false,
+    "is_blocking_items": true,
     "is_moveable": false,
     "is_pickupable": false,
     "is_stackable": false,

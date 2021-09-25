@@ -2,7 +2,6 @@
 
 namespace App\Classes\Client;
 
-
 class Effects
 {
     const

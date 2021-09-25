@@ -6,7 +6,7 @@ use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Walk
+class Push
 {
     use Dispatchable;
 
@@ -14,8 +14,10 @@ class Walk
     public Player $player;
 
     public array $params = [
-        /** @var string */
-        'direction' => null,
+        /** @var array */
+        'fromPos' => null,
+        /** @var array */
+        'toPos' => null,
     ];
 
 

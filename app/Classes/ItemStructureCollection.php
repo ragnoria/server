@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-
 class ItemStructureCollection
 {
     public static array $itemStructures = [];

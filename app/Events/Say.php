@@ -6,7 +6,7 @@ use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Walk
+class Say
 {
     use Dispatchable;
 
@@ -15,7 +15,7 @@ class Walk
 
     public array $params = [
         /** @var string */
-        'direction' => null,
+        'message' => null,
     ];
 
 

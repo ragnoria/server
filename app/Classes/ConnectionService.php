@@ -6,7 +6,6 @@ use App\Classes\Client\Events;
 use App\Models\Player;
 use Ratchet\ConnectionInterface;
 
-
 class ConnectionService
 {
     public static function authorize(ConnectionInterface $conn): bool

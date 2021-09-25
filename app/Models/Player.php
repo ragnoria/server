@@ -66,34 +66,48 @@ class Player extends Model
     public function login()
     {
         World::$players->attach($this);
-        foreach (World::$players as $player) {
-            $player->sendEvent(Events::EFFECT_RUN, [
+        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+            $player->sendEvent(Events::RUN_EFFECT, [
                 'effect' => Effects::LOGIN,
                 'x' => $this->x,
                 'y' => $this->y,
                 'z' => $this->z
             ]);
+            if ($player !== $this) {
+                $player->sendEvent(Events::MOVE_PLAYER, [
+                    'player' => $this,
+                    'direction' => null
+                ]);
+            }
         }
     }
 
     public function logout()
     {
-        foreach (World::$players as $player) {
-            $player->sendEvent(Events::EFFECT_RUN, [
+        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+            $player->sendEvent(Events::RUN_EFFECT, [
                 'effect' => Effects::POOF,
                 'x' => $this->x,
                 'y' => $this->y,
                 'z' => $this->z
+            ]);
+            $player->sendEvent(Events::REMOVE_PLAYER, [
+                'playerId' => $this->id,
             ]);
         }
         World::$players->detach($this);
         $this->save();
     }
 
+    public function getSQM(): SQM
+    {
+        return World::getSQM($this->x, $this->y, $this->z);
+    }
+
     public function getArea(): array
     {
-        $factor_x = (ceil(env('GAME_CLIENT_SQM_WIDTH') / 2) - 1);
-        $factor_y = (ceil(env('GAME_CLIENT_SQM_HEIGHT') / 2) - 1);
+        $factor_x = ceil(env('GAME_CLIENT_SQM_WIDTH') / 2) - 1;
+        $factor_y = ceil(env('GAME_CLIENT_SQM_HEIGHT') / 2) - 1;
         $sqm_range_x = range(($this->x - $factor_x), ($this->x + $factor_x));
         $sqm_range_y = range(($this->y - $factor_y), ($this->y + $factor_y));
 
@@ -110,6 +124,19 @@ class Player extends Model
         }
 
         return $area;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'x' => $this->x,
+            'y' => $this->y,
+            'z' => $this->z,
+            'direction' => $this->direction,
+            'speed' => $this->speed
+        ];
     }
 
     public function sendEvent(string $event, array $data = []): void

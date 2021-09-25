@@ -55,7 +55,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
             event(new $event($conn, $params));
         } catch (\InvalidArgumentException $e) {
             Log::warning($e->getMessage());
-            $conn->player->sendEvent(Events::CONSOLE_ADD_LOG, [
+            $conn->player->sendEvent(Events::LOG, [
                 'msg' => $e->getMessage(),
                 'level' => 'default'
             ]);
@@ -68,7 +68,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
                 $t->getFile(),
                 $t->getLine()
             ));
-            $conn->player->sendEvent(Events::CONSOLE_ADD_LOG, [
+            $conn->player->sendEvent(Events::LOG, [
                 'msg' => 'Invalid command syntax.',
                 'level' => 'default'
             ]);

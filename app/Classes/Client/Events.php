@@ -2,13 +2,17 @@
 
 namespace App\Classes\Client;
 
-
 class Events
 {
     const
         AUTH = 'App.authorization',
         PONG = 'Libs_UI.Ping.pull',
-        CONSOLE_ADD_LOG = 'Libs_Console.addLog',
-        MOVEMENT_CONFIRM_STEP = 'Libs_Movement.confirmStep',
-        EFFECT_RUN = 'Libs_Effect.run';
+        LOG = 'Libs_Console.addLog',
+        CONFIRM_STEP = 'Libs_Movement.confirmStep',
+        RUN_EFFECT = 'Libs_Effect.run',
+        UPDATE_SQM = 'Libs_Board.updateSQM',
+        ROTATE_PLAYER = 'Libs_Player.rotate',
+        SEND_MESSAGE = 'Libs_Chat.prepareMessage',
+        MOVE_PLAYER = 'Libs_Player.move',
+        REMOVE_PLAYER = 'Libs_Player.remove';
 }

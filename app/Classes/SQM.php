@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-
 class SQM
 {
     public int $x;
@@ -43,8 +42,44 @@ class SQM
         if (!$this->hasGround()) {
             return false;
         }
+        if ($this->isBlockingCreatures()) {
+            return false;
+        }
 
         return true;
+    }
+
+    public function isBlockingProjectiles(): bool
+    {
+        foreach ($this->stack as $item) {
+            if ($item->isBlockingProjectiles()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isBlockingCreatures(): bool
+    {
+        foreach ($this->stack as $item) {
+            if ($item->isBlockingCreatures()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isBlockingItems(): bool
+    {
+        foreach ($this->stack as $item) {
+            if ($item->isBlockingItems()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
