@@ -198,8 +198,8 @@ class Player extends Model
 
     public function getArea(): array
     {
-        $factor_x = ceil(env('GAME_CLIENT_SQM_WIDTH') / 2) - 1;
-        $factor_y = ceil(env('GAME_CLIENT_SQM_HEIGHT') / 2) - 1;
+        $factor_x = ceil(config('ragnoria.area.width') / 2) - 1;
+        $factor_y = ceil(config('ragnoria.area.height') / 2) - 1;
         $sqm_range_x = range(($this->x - $factor_x), ($this->x + $factor_x));
         $sqm_range_y = range(($this->y - $factor_y), ($this->y + $factor_y));
 

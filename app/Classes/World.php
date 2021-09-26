@@ -50,8 +50,8 @@ class World
     {
         $players = [];
 
-        $factor_x = ceil(env('GAME_CLIENT_SQM_WIDTH') / 2) - 1;
-        $factor_y = ceil(env('GAME_CLIENT_SQM_HEIGHT') / 2) - 1;
+        $factor_x = ceil(config('ragnoria.area.width') / 2) - 1;
+        $factor_y = ceil(config('ragnoria.area.height') / 2) - 1;
         $range_x = range(($sqm->x - $factor_x), ($sqm->x + $factor_x));
         $range_y = range(($sqm->y - $factor_y), ($sqm->y + $factor_y));
 

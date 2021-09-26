@@ -11,16 +11,14 @@ class MessageParserService
     public static function getEvent(string $msg): string
     {
         $msg = json_decode($msg, true);
-        $event = $msg[0] ?? null;
+        $event = $msg['event'] ?? null;
 
         if (!is_string($event) || preg_match('/[^a-z_\-0-9]/i', $event)) {
             throw new \InvalidArgumentException('The command cannot contain special characters.');
         }
 
-        $event = ucfirst(strtolower(trim($event)));
-        $eventClass = "App\\Events\\" . $event;
-
-        if (!class_exists($eventClass)) {
+        $event = strtolower(trim($event));
+        if (!$eventClass = config('ragnoria.events')[$event] ?? null) {
             throw new \InvalidArgumentException("'{$event}' is not recognized as an internal event.");
         }
 
@@ -34,7 +32,7 @@ class MessageParserService
     public static function getParams(string $msg): array
     {
         $msg = json_decode($msg, true);
-        $params = $msg[1] ?? [];
+        $params = $msg['params'] ?? [];
 
         if (!is_array($params)) {
             throw new \InvalidArgumentException('Invalid parameters.');
