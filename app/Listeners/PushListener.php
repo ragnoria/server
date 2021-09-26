@@ -28,7 +28,7 @@ class PushListener
         if ($this->canPush($fromSQM, $toSQM)) {
             $toSQM->addItem(array_pop($fromSQM->stack));
 
-            foreach (World::getPlayersAround($fromSQM) as $player) {
+            foreach (World::getNearbyPlayers($fromSQM) as $player) {
                 $player->sendEvent(Events::UPDATE_SQM, [
                     'x' => $fromSQM->x,
                     'y' => $fromSQM->y,
@@ -37,7 +37,7 @@ class PushListener
                 ]);
             }
 
-            foreach (World::getPlayersAround($toSQM) as $player) {
+            foreach (World::getNearbyPlayers($toSQM) as $player) {
                 $player->sendEvent(Events::UPDATE_SQM, [
                     'x' => $toSQM->x,
                     'y' => $toSQM->y,

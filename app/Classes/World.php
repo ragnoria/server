@@ -46,7 +46,7 @@ class World
     /**
      * @return Player[]
      */
-    public static function getPlayersAround(SQM $sqm): array
+    public static function getNearbyPlayers(SQM $sqm): array
     {
         $players = [];
 

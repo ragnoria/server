@@ -33,7 +33,7 @@ class SayListener
 
     private function handleMessage()
     {
-        foreach (World::getPlayersAround($this->event->player->getSQM()) as $player) {
+        foreach (World::getNearbyPlayers($this->event->player->getSQM()) as $player) {
             $player->sendEvent(Events::SEND_MESSAGE, [
                 'message' => $this->message,
                 'player' => $this->event->player->toArray(),

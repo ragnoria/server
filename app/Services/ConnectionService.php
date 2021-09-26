@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Classes\Client\Events;
+use App\Classes\World;
 use App\Models\Player;
 use Ratchet\ConnectionInterface;
 
@@ -19,6 +20,7 @@ class ConnectionService
         $player = new Player($newPlayerConfig);
         $player->save();
 
+        /** @var Player $player */
         $player = Player::find($player->id);
         $player->conn = $conn;
         $player->conn->player = $player;
@@ -34,7 +36,7 @@ class ConnectionService
                     'direction' => $player->direction,
                 ],
                 'area' => $player->getArea(),
-                'players' => []
+                'players' => World::getNearbyPlayers($player->getSQM())
             ]
         ]);
 

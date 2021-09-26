@@ -40,7 +40,7 @@ class Player extends Model
     public function login(): void
     {
         World::$players->attach($this);
-        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+        foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
                 'effect' => Effects::LOGIN,
                 'x' => $this->x,
@@ -58,7 +58,7 @@ class Player extends Model
 
     public function logout(): void
     {
-        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+        foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
                 'effect' => Effects::POOF,
                 'x' => $this->x,
@@ -76,7 +76,7 @@ class Player extends Model
     public function move(string $direction): void
     {
         $fromSQM = $this->getSQM();
-        $playersOnAreaBeforeStep = World::getPlayersAround($fromSQM);
+        $playersOnAreaBeforeStep = World::getNearbyPlayers($fromSQM);
         $targetPosition = ['x' => $this->x, 'y' => $this->y, 'z' => $this->z];
 
         if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
@@ -102,7 +102,7 @@ class Player extends Model
             $this->direction = $direction;
 
             $playersStillOnArea = [];
-            foreach (World::getPlayersAround($this->getSQM()) as $player) if ($player !== $this) {
+            foreach (World::getNearbyPlayers($this->getSQM()) as $player) if ($player !== $this) {
                 $player->sendEvent(Events::MOVE_PLAYER, [
                     'player' => $this->toArray(),
                     'direction' => $fromSQM->z == $this->z ? $direction : null
@@ -143,18 +143,18 @@ class Player extends Model
     public function teleport(SQM $sqm): void
     {
         $fromSQM = $this->getSQM();
-        $playersOnAreaBeforeStep = World::getPlayersAround($fromSQM);
+        $playersOnAreaBeforeStep = World::getNearbyPlayers($fromSQM);
 
         $this->x = $sqm->x;
         $this->y = $sqm->y;
         $this->z = $sqm->z;
 
         $playersStillOnArea = [];
-        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+        foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
             if ($player !== $this) {
                 $player->sendEvent(Events::MOVE_PLAYER, [
                     'player' => $this->toArray(),
-                    'direction' => $fromSQM->z == $this->z ? $this->direction : null
+                    'direction' => null
                 ]);
                 if (!in_array($player, $playersOnAreaBeforeStep)) {
                     $this->sendEvent(Events::MOVE_PLAYER, [
