@@ -22,14 +22,15 @@ structure:
 
 ### Events:
 
-We divide events into 'internal events' and 'websocket events'. Internal events can not be triggered through websocket
-message.
-- All events are located in `/app/Events`
+We divide events into 'internal events' and 'websocket events'. Internal events can not be triggered through websocket message.
+- Internal events are located in `/app/Events/Internal`.
+- Websocket events are located in `/app/Events/Websockets`.
 - WebSocket event classes must be added to list of supported websocket events in `/config/ragnoria.php` under `events` key.
 
 ### Listeners
 
-- All listeners are located in `/app/Listeners`.
+- Internal listeners are located in `/app/Listeners/Internal`.
+- Websocket listeners are located in `/app/Listeners/Websockets`.
 - Event-Listener mappings are located in `EventServiceProvider` in `$listen` property.
 
 ### In-game commands:

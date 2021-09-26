@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Websockets;
 
 use App\Classes\Client\Events;
-use App\Events\Ping;
+use App\Events\Websockets\Ping;
 
 class PingListener
 {

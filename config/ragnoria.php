@@ -8,11 +8,11 @@ return [
     ],
 
     'events' => [
-        'ping' => \App\Events\Ping::class,
-        'push' => \App\Events\Push::class,
-        'rotate' => \App\Events\Rotate::class,
-        'say' => \App\Events\Say::class,
-        'walk' => \App\Events\Walk::class,
+        'ping' => \App\Events\Websockets\Ping::class,
+        'push' => \App\Events\Websockets\Push::class,
+        'rotate' => \App\Events\Websockets\Rotate::class,
+        'say' => \App\Events\Websockets\Say::class,
+        'walk' => \App\Events\Websockets\Walk::class,
     ],
 
     'commands' => [

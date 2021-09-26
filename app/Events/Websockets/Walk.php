@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Websockets;
 
 use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Say
+class Walk
 {
     use Dispatchable;
 
@@ -15,7 +15,7 @@ class Say
 
     public array $params = [
         /** @var string */
-        'message' => null,
+        'direction' => null,
     ];
 
 

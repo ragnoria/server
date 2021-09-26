@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Websockets;
 
 use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Push
+class Rotate
 {
     use Dispatchable;
 
@@ -14,10 +14,8 @@ class Push
     public Player $player;
 
     public array $params = [
-        /** @var array */
-        'fromPos' => null,
-        /** @var array */
-        'toPos' => null,
+        /** @var string */
+        'direction' => null,
     ];
 
 

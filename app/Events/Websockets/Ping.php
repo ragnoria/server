@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Websockets;
 
 use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 use Ratchet\ConnectionInterface;
 
-class Walk
+class Ping
 {
     use Dispatchable;
 
@@ -15,7 +15,7 @@ class Walk
 
     public array $params = [
         /** @var string */
-        'direction' => null,
+        'requestId' => null,
     ];
 
 

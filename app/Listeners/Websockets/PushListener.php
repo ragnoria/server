@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Websockets;
 
 use App\Classes\Client\Events;
 use App\Classes\SQM;
 use App\Classes\World;
-use App\Events\Push;
+use App\Events\Websockets\Push;
 
 class PushListener
 {

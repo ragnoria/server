@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Websockets;
 
 use App\Classes\Client\Events;
 use App\Classes\Log;
 use App\Classes\World;
-use App\Events\Say;
+use App\Events\Websockets\Say;
 
 class SayListener
 {
