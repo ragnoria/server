@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Client\Events;
-use App\Classes\ConnectionService;
 use App\Classes\Log;
-use App\Classes\MessageParser;
 use App\Classes\World;
+use App\Services\ConnectionService;
+use App\Services\MessageParserService;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\MessageComponentInterface;
 
@@ -50,8 +50,8 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         }
 
         try {
-            $event = MessageParser::getEvent($msg);
-            $params = MessageParser::getParams($msg);
+            $event = MessageParserService::getEvent($msg);
+            $params = MessageParserService::getParams($msg);
             event(new $event($conn, $params));
         } catch (\InvalidArgumentException $e) {
             Log::warning($e->getMessage());

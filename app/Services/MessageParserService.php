@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Classes;
+namespace App\Services;
 
-class MessageParser
+class MessageParserService
 {
     /**
      * @param string $msg

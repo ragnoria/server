@@ -24,7 +24,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        // client events
         Ping::class => [PingListener::class],
         Walk::class => [WalkListener::class],
         Push::class => [PushListener::class],

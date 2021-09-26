@@ -23,7 +23,7 @@ class RotateListener
 
         foreach (World::getPlayersAround($event->player->getSQM()) as $player) if ($event->player !== $player) {
             $player->sendEvent(Events::ROTATE_PLAYER, [
-                'player' => $event->player->name,
+                'player' => $event->player->id,
                 'direction' => $event->player->direction,
             ]);
         }

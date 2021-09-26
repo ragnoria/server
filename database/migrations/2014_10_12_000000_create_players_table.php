@@ -15,6 +15,7 @@ class CreatePlayersTable extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('role')->default('0')->unsigned();
             $table->string('name')->unique();
             $table->integer('x');
             $table->integer('y');

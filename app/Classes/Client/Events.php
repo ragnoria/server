@@ -14,5 +14,6 @@ class Events
         ROTATE_PLAYER = 'Libs_Player.rotate',
         SEND_MESSAGE = 'Libs_Chat.prepareMessage',
         MOVE_PLAYER = 'Libs_Player.move',
+        UPDATE_POSITION = 'Libs_Movement.updatePosition',
         REMOVE_PLAYER = 'Libs_Player.remove';
 }

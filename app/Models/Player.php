@@ -22,6 +22,11 @@ use Ratchet\ConnectionInterface;
  */
 class Player extends Model
 {
+    const
+        ROLE_PLAYER = 0,
+        ROLE_GAMEMASTER = 1;
+
+
     protected $guarded = [];
 
 
@@ -32,38 +37,7 @@ class Player extends Model
     public int $speed;
 
 
-    public function move(string $direction): bool
-    {
-        $targetPosition = ['x' => $this->x, 'y' => $this->y, 'z' => $this->z];
-
-        if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
-            $targetPosition['x']--;
-        }
-        if (in_array($direction, ['East', 'NorthEast', 'SouthEast'])) {
-            $targetPosition['x']++;
-        }
-        if (in_array($direction, ['North', 'NorthEast', 'NorthWest'])) {
-            $targetPosition['y']--;
-        }
-        if (in_array($direction, ['South', 'SouthEast', 'SouthWest'])) {
-            $targetPosition['y']++;
-        }
-
-        /** @var SQM $SQM */
-        $SQM = World::getSQM(($targetPosition['x']), $targetPosition['y'], $targetPosition['z']);
-        if (!$SQM->isWalkable()) {
-            return false;
-        }
-
-        $this->x = $targetPosition['x'];
-        $this->y = $targetPosition['y'];
-        $this->z = $targetPosition['z'];
-        $this->direction = $direction;
-
-        return true;
-    }
-
-    public function login()
+    public function login(): void
     {
         World::$players->attach($this);
         foreach (World::getPlayersAround($this->getSQM()) as $player) {
@@ -82,7 +56,7 @@ class Player extends Model
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
         foreach (World::getPlayersAround($this->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
@@ -97,6 +71,124 @@ class Player extends Model
         }
         World::$players->detach($this);
         $this->save();
+    }
+
+    public function move(string $direction): void
+    {
+        $fromSQM = $this->getSQM();
+        $playersOnAreaBeforeStep = World::getPlayersAround($fromSQM);
+        $targetPosition = ['x' => $this->x, 'y' => $this->y, 'z' => $this->z];
+
+        if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
+            $targetPosition['x']--;
+        }
+        if (in_array($direction, ['East', 'NorthEast', 'SouthEast'])) {
+            $targetPosition['x']++;
+        }
+        if (in_array($direction, ['North', 'NorthEast', 'NorthWest'])) {
+            $targetPosition['y']--;
+        }
+        if (in_array($direction, ['South', 'SouthEast', 'SouthWest'])) {
+            $targetPosition['y']++;
+        }
+
+        /** @var SQM $SQM */
+        $SQM = World::getSQM(($targetPosition['x']), $targetPosition['y'], $targetPosition['z']);
+        if ($SQM->isWalkable()) {
+
+            $this->x = $targetPosition['x'];
+            $this->y = $targetPosition['y'];
+            $this->z = $targetPosition['z'];
+            $this->direction = $direction;
+
+            $playersStillOnArea = [];
+            foreach (World::getPlayersAround($this->getSQM()) as $player) if ($player !== $this) {
+                $player->sendEvent(Events::MOVE_PLAYER, [
+                    'player' => $this->toArray(),
+                    'direction' => $fromSQM->z == $this->z ? $direction : null
+                ]);
+                if (!in_array($player, $playersOnAreaBeforeStep)) {
+                    $this->sendEvent(Events::MOVE_PLAYER, [
+                        'player' => $player->toArray(),
+                        'direction' => null
+                    ]);
+                }
+                $playersStillOnArea[] = $player;
+            }
+
+            foreach ($playersOnAreaBeforeStep as $player) if ($player !== $this) {
+                if (!in_array($player, $playersStillOnArea)) {
+                    $player->sendEvent(Events::REMOVE_PLAYER, [
+                        'playerId' => $this->id
+                    ]);
+                    $this->sendEvent(Events::REMOVE_PLAYER, [
+                        'playerId' => $player->id
+                    ]);
+                }
+            }
+        }
+
+        $moved = $fromSQM !== $this->getSQM();
+
+        $this->sendEvent(Events::CONFIRM_STEP, [
+            'status' => $moved ? 'success' : 'failed',
+            'area' => $moved ? $this->getArea() : null,
+            'x' => $this->x,
+            'y' => $this->y,
+            'z' => $this->z,
+            'direction' => $this->direction,
+        ]);
+    }
+
+    public function teleport(SQM $sqm): void
+    {
+        $fromSQM = $this->getSQM();
+        $playersOnAreaBeforeStep = World::getPlayersAround($fromSQM);
+
+        $this->x = $sqm->x;
+        $this->y = $sqm->y;
+        $this->z = $sqm->z;
+
+        $playersStillOnArea = [];
+        foreach (World::getPlayersAround($this->getSQM()) as $player) {
+            if ($player !== $this) {
+                $player->sendEvent(Events::MOVE_PLAYER, [
+                    'player' => $this->toArray(),
+                    'direction' => $fromSQM->z == $this->z ? $this->direction : null
+                ]);
+                if (!in_array($player, $playersOnAreaBeforeStep)) {
+                    $this->sendEvent(Events::MOVE_PLAYER, [
+                        'player' => $player->toArray(),
+                        'direction' => null
+                    ]);
+                }
+                $playersStillOnArea[] = $player;
+            }
+            $player->sendEvent(Events::RUN_EFFECT, [
+                'effect' => Effects::LOGIN,
+                'x' => $this->x,
+                'y' => $this->y,
+                'z' => $this->z
+            ]);
+        }
+        foreach ($playersOnAreaBeforeStep as $player) if ($player !== $this) {
+            if (!in_array($player, $playersStillOnArea)) {
+                $player->sendEvent(Events::REMOVE_PLAYER, [
+                    'playerId' => $this->id
+                ]);
+                $this->sendEvent(Events::REMOVE_PLAYER, [
+                    'playerId' => $player->id
+                ]);
+            }
+        }
+        $this->sendEvent(Events::UPDATE_POSITION, [
+            'status' => 'success',
+            'area' => $this->getArea(),
+            'x' => $this->x,
+            'y' => $this->y,
+            'z' => $this->z,
+            'direction' => $this->direction,
+        ]);
     }
 
     public function getSQM(): SQM
@@ -126,7 +218,7 @@ class Player extends Model
         return $area;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,

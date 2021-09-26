@@ -22,7 +22,7 @@ class Item
 
     public ?int $action_id;
 
-    public ?int $guid;
+    public ?string $guid;
 
 
     public function __construct(int $id, int $quantity, int $action_id = null)
@@ -30,7 +30,7 @@ class Item
         $this->id = $id;
         $this->quantity = $quantity;
         $this->action_id = $action_id;
-        $this->guid = $quantity;
+        $this->guid = uniqid();
     }
 
     public function getType(): int
