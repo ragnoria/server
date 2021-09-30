@@ -45,6 +45,9 @@ class SQM
         if ($this->isBlockingCreatures()) {
             return false;
         }
+        foreach (World::$players as $player) if ($player->getSQM() === $this) {
+            return false;
+        }
 
         return true;
     }

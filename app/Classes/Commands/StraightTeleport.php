@@ -35,7 +35,8 @@ class StraightTeleport
                 $targetSQM = World::getSQM($player->x - $distance, $player->y, $player->z);
                 break;
         }
-        if (isset($targetSQM) && $targetSQM->hasGround()) {
+        
+        if (!empty($targetSQM)) {
             $player->teleport($targetSQM);
         }
     }

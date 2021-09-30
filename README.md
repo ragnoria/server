@@ -1,14 +1,8 @@
 # Ragnoria server
 
-### Running server:
-
-```bash
-php artisan ragnoria:serve
-```
-
 ### Client-Server communication
 
-The data exchange format is identical on both sides: server expects and emits messages in json format with the following
+The data exchange format is identical on both sides: server expects and emits websocket messages in json format with the following
 structure:
 ```json
 {
@@ -22,12 +16,12 @@ structure:
 
 ### Events:
 
-We divide events into 'internal events' and 'websocket events'. Internal events can not be triggered through websocket message.
+Events in application are divided into 'internal events' and 'websocket events'. Internal events can not be triggered through websocket message.
 - Internal events are located in `/app/Events/Internal`.
 - Websocket events are located in `/app/Events/Websockets`.
 - WebSocket event classes must be added to list of supported websocket events in `/config/ragnoria.php` under `events` key.
 
-### Listeners
+### Listeners:
 
 - Internal listeners are located in `/app/Listeners/Internal`.
 - Websocket listeners are located in `/app/Listeners/Websockets`.
@@ -35,5 +29,29 @@ We divide events into 'internal events' and 'websocket events'. Internal events 
 
 ### In-game commands:
 
-All in-game commands are handled by own class located in `/app/Classes/Commands`. To work command class must be added to
-supported commands list in `/config/ragnoria.php` under `commands` key.
+All in-game commands are handled by own class located in `/app/Classes/Commands`.
+Commands are assigned to application in `/config/ragnoria.php` under `commands` key.
+
+### In-game actions:
+
+All in-game actions are handled by own class located in `/app/Classes/Actions`.
+Actions are assigned to application in `/config/ragnoria.php` under `actions` key in a following structure:
+```php
+'{action-type}' => [
+    '{item-id}' => '{handling-class}'
+]
+```
+
+_Example action:_
+```php
+'actions' => [
+    'walk-on' => [
+        5 => \App\Classes\Actions\OnWalkPoisonField::class
+    ],
+]
+```
+Such notation means: when any creature `walk on` item with id `5` server will trigger handling method in `OnWalkPoisonField` class.
+
+Types of actions available so far:
+- use
+- walk-on

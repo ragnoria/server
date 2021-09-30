@@ -2,8 +2,37 @@
 
 namespace App\Classes;
 
-class MiscHelper
+use App\Interfaces\CreatureInterface;
+
+class Helper
 {
+    static function inRange(CreatureInterface $creature, SQM $sqm, $radius = 1): bool
+    {
+        return (abs($sqm->x - $creature->x) <= $radius && abs($sqm->y - $creature->y) <= $radius && $sqm->z == $creature->z);
+    }
+
+    static function getSQMAfterStep(SQM $sqm, string $direction): ?SQM
+    {
+        $x = $sqm->x;
+        $y = $sqm->y;
+        $z = $sqm->z;
+
+        if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
+            $x--;
+        }
+        if (in_array($direction, ['East', 'NorthEast', 'SouthEast'])) {
+            $x++;
+        }
+        if (in_array($direction, ['North', 'NorthEast', 'NorthWest'])) {
+            $y--;
+        }
+        if (in_array($direction, ['South', 'SouthEast', 'SouthWest'])) {
+            $y++;
+        }
+
+        return World::getSQM($x, $y, $z);
+    }
+
     static function getFieldsBetween(array $A, array $B): array
     {
         $results = [];

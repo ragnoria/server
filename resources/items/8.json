@@ -1,0 +1,21 @@
+{
+    "id": 8,
+    "type": 5,
+    "name": "street lamp",
+    "size": 2,
+    "altitude": 0,
+    "is_animating": false,
+    "is_blocking_creatures": true,
+    "is_blocking_projectiles": false,
+    "is_blocking_items": true,
+    "is_moveable": false,
+    "is_pickupable": false,
+    "is_stackable": false,
+    "is_always_top": false,
+    "light_radius": 8,
+    "light_level": 5,
+    "light_color": "orange",
+    "padding_x": 0,
+    "padding_y": 0,
+    "sprites": "{\"Stack1\":{\"Frame1\":\"266\"}}"
+}

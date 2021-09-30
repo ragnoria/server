@@ -28,7 +28,7 @@ class World
     public static function getSQMsBetween(SQM $fromSQM, SQM $toSQM): array
     {
         $result = [];
-        $fields = MiscHelper::getFieldsBetween(
+        $fields = Helper::getFieldsBetween(
             ['X' => $fromSQM->x, 'Y' => $fromSQM->y],
             ['X' => $toSQM->x, 'Y' => $toSQM->y]
         );

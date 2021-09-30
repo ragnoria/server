@@ -12,6 +12,7 @@ class ConnectionService
     public static function authorize(ConnectionInterface $conn): bool
     {
         $newPlayerConfig = [
+            'role' => Player::ROLE_PLAYER,
             'name' => 'Guest #' . Player::count(),
             'x' => 5000,
             'y' => 5000,

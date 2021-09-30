@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Classes\SQM;
 use App\Classes\World;
 use App\Classes\WsEventRequest;
 use App\Events\Internal\PlayerLoggedIn;
 use App\Events\Internal\PlayerLoggedOut;
-use App\Events\Internal\PlayerTeleported;
-use App\Events\Internal\PlayerWalked;
+use App\Interfaces\CreatureInterface;
+use App\Traits\CreatureTrait;
 use Illuminate\Database\Eloquent\Model;
 use Ratchet\ConnectionInterface;
 
 /**
  * DB
  * @property int $id
+ * @property int $role
  * @property string $name
  * @property int $x
  * @property int $y
@@ -22,9 +22,12 @@ use Ratchet\ConnectionInterface;
  * @property string $created_at
  * @property string $updated_at
  */
-class Player extends Model
+class Player extends Model implements CreatureInterface
 {
-    const
+    use CreatureTrait;
+
+
+    public const
         ROLE_PLAYER = 0,
         ROLE_GAMEMASTER = 1;
 
@@ -52,52 +55,9 @@ class Player extends Model
         event(new PlayerLoggedOut($this));
     }
 
-    public function walk(string $direction): void
+    public function hasPermissions($role): bool
     {
-        $fromSQM = $this->getSQM();
-        $targetPosition = ['x' => $this->x, 'y' => $this->y, 'z' => $this->z];
-
-        if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
-            $targetPosition['x']--;
-        }
-        if (in_array($direction, ['East', 'NorthEast', 'SouthEast'])) {
-            $targetPosition['x']++;
-        }
-        if (in_array($direction, ['North', 'NorthEast', 'NorthWest'])) {
-            $targetPosition['y']--;
-        }
-        if (in_array($direction, ['South', 'SouthEast', 'SouthWest'])) {
-            $targetPosition['y']++;
-        }
-
-        $toSQM = World::getSQM(($targetPosition['x']), $targetPosition['y'], $targetPosition['z']);
-        if ($toSQM && $toSQM->isWalkable()) {
-            $this->x = $toSQM->x;
-            $this->y = $toSQM->y;
-            $this->z = $toSQM->z;
-            $this->direction = $direction;
-        }
-
-        event(new PlayerWalked($this, $fromSQM, $toSQM));
-    }
-
-    public function teleport(SQM $toSQM): void
-    {
-        if (!$toSQM->hasGround()) {
-            return;
-        }
-
-        $fromSQM = $this->getSQM();
-        $this->x = $toSQM->x;
-        $this->y = $toSQM->y;
-        $this->z = $toSQM->z;
-
-        event(new PlayerTeleported($this, $fromSQM, $toSQM));
-    }
-
-    public function getSQM(): SQM
-    {
-        return World::getSQM($this->x, $this->y, $this->z);
+        return $this->role >= $role;
     }
 
     public function getArea(): array

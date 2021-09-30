@@ -3,9 +3,11 @@
 namespace App\Listeners\Websockets;
 
 use App\Classes\Client\Events;
+use App\Classes\Helper;
 use App\Classes\SQM;
 use App\Classes\World;
 use App\Events\Websockets\Push;
+use App\Models\Player;
 
 class PushListener
 {
@@ -21,8 +23,10 @@ class PushListener
             return;
         }
 
-        if (abs($fromSQM->x - $event->player->x) > 1 || abs($fromSQM->y - $event->player->y) > 1) {
-            return;
+        if ($event->player->hasPermissions(Player::ROLE_GAMEMASTER) === false) {
+            if (Helper::inRange($event->player, $fromSQM) === false) {
+                return;
+            }
         }
 
         if ($this->canPush($fromSQM, $toSQM)) {
