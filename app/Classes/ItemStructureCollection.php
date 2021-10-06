@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use Illuminate\Support\Facades\DB;
+
 class ItemStructureCollection
 {
     public static array $itemStructures = [];
@@ -12,12 +14,8 @@ class ItemStructureCollection
         Log::info('Loading items..');
 
         try {
-            foreach (scandir(resource_path('items/')) as $file) {
-                if (in_array($file, ['.', '..'])) {
-                    continue;
-                }
-                $item = json_decode(file_get_contents(resource_path('items/' . $file)), true);
-                self::$itemStructures[$item['id']] = $item;
+            foreach (DB::table('items')->get() as $item) {
+                self::$itemStructures[$item->id] = (array) $item;
             }
         } catch (\Exception $e) {
             Log::error('Could not load items.');
