@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Classes\Helper;
+use App\Classes\Outfit;
 use App\Classes\SQM;
 use App\Classes\World;
 use App\Events\Internal\PlayerTeleported;
@@ -13,6 +14,8 @@ use App\Models\Player;
 
 trait CreatureTrait
 {
+    public Outfit $outfit;
+
 
     public function getSQM(): SQM
     {

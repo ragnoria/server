@@ -32,14 +32,14 @@ class Player extends Model implements CreatureInterface
         ROLE_GAMEMASTER = 1;
 
 
-    protected $guarded = [];
-
-
     public ConnectionInterface $conn;
 
     public string $direction;
 
     public int $speed;
+
+
+    protected $guarded = [];
 
 
     public function login(): void
@@ -91,7 +91,8 @@ class Player extends Model implements CreatureInterface
             'y' => $this->y,
             'z' => $this->z,
             'direction' => $this->direction,
-            'speed' => $this->speed
+            'speed' => $this->speed,
+            'outfit' => $this->outfit->toArray(),
         ];
     }
 

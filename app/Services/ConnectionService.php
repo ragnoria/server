@@ -28,14 +28,7 @@ class ConnectionService
         $player->sendEvent(Events::AUTH, [
             'state' => 'pass',
             'params' => [
-                'hero' => [
-                    'name' => $player->name,
-                    'x' => $player->x,
-                    'y' => $player->y,
-                    'z' => $player->z,
-                    'speed' => $player->speed,
-                    'direction' => $player->direction,
-                ],
+                'hero' => $player->toArray(),
                 'area' => $player->getArea(),
                 'players' => World::getNearbyPlayers($player->getSQM())
             ]

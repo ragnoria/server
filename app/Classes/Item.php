@@ -43,11 +43,6 @@ class Item
         return ItemStructureCollection::$itemStructures[$this->id]['name'];
     }
 
-    public function getSize(): int
-    {
-        return ItemStructureCollection::$itemStructures[$this->id]['size'];
-    }
-
     public function getAltitude(): int
     {
         return ItemStructureCollection::$itemStructures[$this->id]['altitude'];
