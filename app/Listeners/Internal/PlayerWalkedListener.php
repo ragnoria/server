@@ -16,12 +16,12 @@ class PlayerWalkedListener
             $playersOnAreaBeforeStep = World::getNearbyPlayers($event->fromSQM);
             $playersStillOnArea = [];
             foreach (World::getNearbyPlayers($event->toSQM) as $player) if ($player !== $event->player) {
-                $player->sendEvent(Events::MOVE_PLAYER, [
+                $player->sendEvent(Events::PLAYER_MOVE, [
                     'player' => $event->player->toArray(),
                     'direction' => $event->fromSQM->z == $event->player->z ? $event->player->direction : null
                 ]);
                 if (!in_array($player, $playersOnAreaBeforeStep)) {
-                    $event->player->sendEvent(Events::MOVE_PLAYER, [
+                    $event->player->sendEvent(Events::PLAYER_MOVE, [
                         'player' => $player->toArray(),
                         'direction' => null
                     ]);
@@ -31,10 +31,10 @@ class PlayerWalkedListener
 
             foreach ($playersOnAreaBeforeStep as $player) if ($player !== $event->player) {
                 if (!in_array($player, $playersStillOnArea)) {
-                    $player->sendEvent(Events::REMOVE_PLAYER, [
+                    $player->sendEvent(Events::PLAYER_REMOVE, [
                         'playerId' => $event->player->id
                     ]);
-                    $event->player->sendEvent(Events::REMOVE_PLAYER, [
+                    $event->player->sendEvent(Events::PLAYER_REMOVE, [
                         'playerId' => $player->id
                     ]);
                 }

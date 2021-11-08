@@ -11,9 +11,10 @@ class Events
         CONFIRM_STEP = 'Libs_Movement.confirmStep',
         RUN_EFFECT = 'Libs_Effect.run',
         UPDATE_SQM = 'Libs_Board.updateSQM',
-        ROTATE_PLAYER = 'Libs_Player.rotate',
         SEND_MESSAGE = 'Libs_Chat.prepareMessage',
-        MOVE_PLAYER = 'Libs_Player.move',
         UPDATE_POSITION = 'Libs_Movement.updatePosition',
-        REMOVE_PLAYER = 'Libs_Player.remove';
+        PLAYER_MOVE = 'Libs_Player.move',
+        PLAYER_REMOVE = 'Libs_Player.remove',
+        PLAYER_ROTATE = 'Libs_Player.rotate',
+        PLAYER_HURT = 'Libs_Player.hurt';
 }

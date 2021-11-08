@@ -15,12 +15,12 @@ class PlayerTeleportedListener
         $playersStillOnArea = [];
         foreach (World::getNearbyPlayers($event->toSQM) as $player) {
             if ($player !== $event->player) {
-                $player->sendEvent(Events::MOVE_PLAYER, [
+                $player->sendEvent(Events::PLAYER_MOVE, [
                     'player' => $event->player->toArray(),
                     'direction' => null
                 ]);
                 if (!in_array($player, $playersOnAreaBeforeStep)) {
-                    $event->player->sendEvent(Events::MOVE_PLAYER, [
+                    $event->player->sendEvent(Events::PLAYER_MOVE, [
                         'player' => $player->toArray(),
                         'direction' => null
                     ]);
@@ -28,7 +28,7 @@ class PlayerTeleportedListener
                 $playersStillOnArea[] = $player;
             }
             $player->sendEvent(Events::RUN_EFFECT, [
-                'effect' => Effects::LOGIN,
+                'effect' => Effects::TELEPORT,
                 'x' => $event->player->x,
                 'y' => $event->player->y,
                 'z' => $event->player->z
@@ -36,10 +36,10 @@ class PlayerTeleportedListener
         }
         foreach ($playersOnAreaBeforeStep as $player) if ($player !== $event->player) {
             if (!in_array($player, $playersStillOnArea)) {
-                $player->sendEvent(Events::REMOVE_PLAYER, [
+                $player->sendEvent(Events::PLAYER_REMOVE, [
                     'playerId' => $event->player->id
                 ]);
-                $event->player->sendEvent(Events::REMOVE_PLAYER, [
+                $event->player->sendEvent(Events::PLAYER_REMOVE, [
                     'playerId' => $player->id
                 ]);
             }

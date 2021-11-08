@@ -11,14 +11,16 @@ class ConnectionService
 {
     public static function authorize(ConnectionInterface $conn): bool
     {
-        $newPlayerConfig = [
+        $player = new Player([
             'role' => Player::ROLE_PLAYER,
-            'name' => 'Guest #' . Player::count(),
-            'x' => 5000,
-            'y' => 5000,
-            'z' => 0,
-        ];
-        $player = new Player($newPlayerConfig);
+            'name' => 'Guest #' . (Player::count() + 1),
+            'hp' => 100,
+            'hp_max' => 100,
+            'x' => config('ragnoria.respawn.x'),
+            'y' => config('ragnoria.respawn.y'),
+            'z' => config('ragnoria.respawn.z'),
+            'ip' => $conn->remoteAddress,
+        ]);
         $player->save();
 
         /** @var Player $player */

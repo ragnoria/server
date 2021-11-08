@@ -2,17 +2,18 @@
 
 namespace App\Classes\Commands;
 
-use App\Classes\World;
+use App\Classes\Helper;
+use App\Interfaces\CommandInterface;
 use App\Models\Player;
 
-class StraightTeleport
+class StraightTeleport implements CommandInterface
 {
     public static string $signature = '/a';
 
     public static int $role = Player::ROLE_GAMEMASTER;
 
 
-    public static function cast(Player $player, array $params)
+    public static function cast(Player $player, array $params): void
     {
         $distance = $params[0] ?? null;
 
@@ -20,25 +21,11 @@ class StraightTeleport
             return;
         }
 
-        $distance = (int)$distance;
-        switch ($player->direction) {
-            case 'South':
-                $targetSQM = World::getSQM($player->x, $player->y + $distance, $player->z);
-                break;
-            case 'East':
-                $targetSQM = World::getSQM($player->x + $distance, $player->y, $player->z);
-                break;
-            case 'North':
-                $targetSQM = World::getSQM($player->x, $player->y - $distance, $player->z);
-                break;
-            case 'West':
-                $targetSQM = World::getSQM($player->x - $distance, $player->y, $player->z);
-                break;
+        if (!$targetSQM = Helper::getSQMAfterMove($player->getSQM(), $player->direction, $distance)) {
+            return;
         }
-        
-        if (!empty($targetSQM)) {
-            $player->teleport($targetSQM);
-        }
+
+        $player->teleport($targetSQM);
     }
 
 }

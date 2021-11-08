@@ -18,7 +18,7 @@ class PlayerLoggedOutListener
                 'y' => $event->player->y,
                 'z' => $event->player->z
             ]);
-            $player->sendEvent(Events::REMOVE_PLAYER, [
+            $player->sendEvent(Events::PLAYER_REMOVE, [
                 'playerId' => $event->player->id,
             ]);
         }

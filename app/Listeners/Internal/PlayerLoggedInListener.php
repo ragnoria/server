@@ -13,13 +13,13 @@ class PlayerLoggedInListener
     {
         foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
-                'effect' => Effects::LOGIN,
+                'effect' => Effects::TELEPORT,
                 'x' => $event->player->x,
                 'y' => $event->player->y,
                 'z' => $event->player->z
             ]);
             if ($player !== $event->player) {
-                $player->sendEvent(Events::MOVE_PLAYER, [
+                $player->sendEvent(Events::PLAYER_MOVE, [
                     'player' => $event->player->toArray(),
                     'direction' => null
                 ]);

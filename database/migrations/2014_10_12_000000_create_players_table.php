@@ -16,10 +16,13 @@ class CreatePlayersTable extends Migration
         Schema::create('players', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('role')->default('0')->unsigned();
-            $table->string('name')->unique();
+            $table->string('name', 30)->unique();
+            $table->integer('hp')->unsigned();
+            $table->integer('hp_max')->unsigned();
             $table->integer('x');
             $table->integer('y');
             $table->integer('z');
+            $table->string('ip', 40)->nullable();
             $table->timestamps();
         });
     }

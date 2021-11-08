@@ -11,23 +11,23 @@ class Helper
         return (abs($sqm->x - $creature->x) <= $radius && abs($sqm->y - $creature->y) <= $radius && $sqm->z == $creature->z);
     }
 
-    static function getSQMAfterStep(SQM $sqm, string $direction): ?SQM
+    static function getSQMAfterMove(SQM $sqm, string $direction, int $distance = 1): ?SQM
     {
         $x = $sqm->x;
         $y = $sqm->y;
         $z = $sqm->z;
 
         if (in_array($direction, ['West', 'NorthWest', 'SouthWest'])) {
-            $x--;
+            $x -= $distance;
         }
         if (in_array($direction, ['East', 'NorthEast', 'SouthEast'])) {
-            $x++;
+            $x += $distance;
         }
         if (in_array($direction, ['North', 'NorthEast', 'NorthWest'])) {
-            $y--;
+            $y -= $distance;
         }
         if (in_array($direction, ['South', 'SouthEast', 'SouthWest'])) {
-            $y++;
+            $y += $distance;
         }
 
         return World::getSQM($x, $y, $z);

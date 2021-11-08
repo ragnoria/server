@@ -22,7 +22,7 @@ class RotateListener
         $event->player->direction = $event->params['direction'];
 
         foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) if ($event->player !== $player) {
-            $player->sendEvent(Events::ROTATE_PLAYER, [
+            $player->sendEvent(Events::PLAYER_ROTATE, [
                 'player' => $event->player->id,
                 'direction' => $event->player->direction,
             ]);
