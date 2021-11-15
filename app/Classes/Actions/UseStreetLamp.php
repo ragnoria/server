@@ -7,7 +7,7 @@ use App\Classes\Item;
 use App\Classes\World;
 use App\Events\Websockets\UseItem;
 
-class OnUseStreetLamp
+class UseStreetLamp
 {
     public static function handle(UseItem $event, Item $item)
     {

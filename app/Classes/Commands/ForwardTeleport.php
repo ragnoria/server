@@ -6,7 +6,7 @@ use App\Classes\Helper;
 use App\Interfaces\CommandInterface;
 use App\Models\Player;
 
-class StraightTeleport implements CommandInterface
+class ForwardTeleport implements CommandInterface
 {
     public static string $signature = '/a';
 

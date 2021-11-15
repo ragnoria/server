@@ -9,7 +9,7 @@ class Events
         PONG = 'Libs_UI.Ping.pull',
         LOG = 'Libs_Console.addLog',
         CONFIRM_STEP = 'Libs_Movement.confirmStep',
-        RUN_EFFECT = 'Libs_Effect.run',
+        RUN_EFFECT = 'App.runEffect',
         UPDATE_SQM = 'Libs_Board.updateSQM',
         SEND_MESSAGE = 'Libs_Chat.prepareMessage',
         UPDATE_POSITION = 'Libs_Movement.updatePosition',

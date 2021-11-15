@@ -13,7 +13,7 @@ class PlayerLoggedOutListener
     {
         foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
-                'effect' => Effects::POOF,
+                'id' => Effects::POOF,
                 'x' => $event->player->x,
                 'y' => $event->player->y,
                 'z' => $event->player->z

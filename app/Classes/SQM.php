@@ -21,9 +21,13 @@ class SQM
         $this->z = $z;
     }
 
-    public function addItem(Item $item): void
+    public function addItem(Item $item, bool $onBottom = false): void
     {
-        $this->stack[] = $item;
+        if ($onBottom) {
+            array_unshift($this->stack, $item);
+        } else {
+            $this->stack[] = $item;
+        }
     }
 
     public function hasGround(): bool

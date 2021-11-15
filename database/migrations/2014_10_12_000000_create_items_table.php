@@ -17,7 +17,6 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->tinyInteger('type');
             $table->string('name');
-            $table->tinyInteger('size')->default('1')->comment('1 - 2');
             $table->tinyInteger('altitude')->default('0');
             $table->tinyInteger('is_animating')->default('0');
             $table->tinyInteger('is_blocking_creatures')->default('0');
@@ -43,6 +42,7 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+//        Schema::dropIfExists('items');
+        return false;
     }
 }

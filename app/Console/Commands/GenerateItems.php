@@ -11,7 +11,7 @@ class GenerateItems extends Command
     protected $signature = 'generate:items';
 
     protected $description = 'Generates items.json';
-    
+
 
     public function handle()
     {

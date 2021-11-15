@@ -14,8 +14,8 @@ class ConnectionService
         $player = new Player([
             'role' => Player::ROLE_PLAYER,
             'name' => 'Guest #' . (Player::count() + 1),
-            'hp' => 100,
-            'hp_max' => 100,
+            'hp' => 200,
+            'hp_max' => 200,
             'x' => config('ragnoria.respawn.x'),
             'y' => config('ragnoria.respawn.y'),
             'z' => config('ragnoria.respawn.z'),

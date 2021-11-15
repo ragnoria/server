@@ -13,7 +13,7 @@ class PlayerLoggedInListener
     {
         foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) {
             $player->sendEvent(Events::RUN_EFFECT, [
-                'effect' => Effects::TELEPORT,
+                'id' => Effects::TELEPORT,
                 'x' => $event->player->x,
                 'y' => $event->player->y,
                 'z' => $event->player->z

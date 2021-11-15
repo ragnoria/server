@@ -23,7 +23,7 @@ return [
     ],
 
     'commands' => [
-        \App\Classes\Commands\StraightTeleport::class,
+        \App\Classes\Commands\ForwardTeleport::class,
         \App\Classes\Commands\FloorUpTeleport::class,
         \App\Classes\Commands\FloorDownTeleport::class,
         \App\Classes\Commands\TownTeleport::class,
@@ -31,11 +31,17 @@ return [
 
     'actions' => [
         'walk-on' => [
-            5 => \App\Classes\Actions\OnWalkPoisonField::class
+            5 => \App\Classes\Actions\WalkOnPoisonField::class,
+            9 => \App\Classes\Actions\WalkOnEnergyField::class,
+            10 => \App\Classes\Actions\WalkOnFireField::class,
+            12 => \App\Classes\Actions\WalkOnTrap::class
+        ],
+        'walk-out' => [
+            13 => \App\Classes\Actions\WalkOutTrap::class,
         ],
         'use' => [
-            7 => \App\Classes\Actions\OnUseStreetLamp::class,
-            8 => \App\Classes\Actions\OnUseStreetLamp::class
+            7 => \App\Classes\Actions\UseStreetLamp::class,
+            8 => \App\Classes\Actions\UseStreetLamp::class
         ],
     ]
 

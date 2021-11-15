@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\Client\Effects;
 use App\Classes\Client\Events;
 use App\Classes\Helper;
+use App\Classes\Item;
 use App\Classes\Outfit;
 use App\Classes\SQM;
 use App\Classes\World;
@@ -30,6 +31,7 @@ use Ratchet\ConnectionInterface;
  * @property int $y
  * @property int $z
  * @property string $ip
+ *
  * @property string $created_at
  * @property string $updated_at
  */
@@ -56,12 +58,14 @@ class Player extends Model implements CreatureInterface
     {
         World::$players->attach($this);
         event(new PlayerLoggedIn($this));
+        event(new WalkedIn($this, $this->getSQM()));
     }
 
     public function logout(): void
     {
         World::$players->detach($this);
         event(new PlayerLoggedOut($this));
+        event(new WalkedOut($this, $this->getSQM()));
         $this->conn->close();
         $this->save();
     }
@@ -133,7 +137,7 @@ class Player extends Model implements CreatureInterface
         } else {
             foreach(World::getNearbyPlayers($this->getSQM()) as $player) {
                 $player->sendEvent(Events::RUN_EFFECT, [
-                    'effect' => Effects::POOF,
+                    'id' => Effects::POOF,
                     'x' => $this->x,
                     'y' => $this->y,
                     'z' => $this->z
@@ -148,7 +152,18 @@ class Player extends Model implements CreatureInterface
 
     public function die(): void
     {
-        $this->conn->close();
+        $this->getSQM()->addItem(new Item(11, 1));
+        foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
+            $player->sendEvent(Events::UPDATE_SQM, [
+                'x' => $this->x,
+                'y' => $this->y,
+                'z' => $this->z,
+                'stack' => $this->getSQM()->stack,
+            ]);
+        }
+
+        $this->logout();
+
         $this->hp = $this->hp_max;
         $this->x = config('ragnoria.respawn.x');
         $this->y = config('ragnoria.respawn.y');
