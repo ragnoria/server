@@ -11,5 +11,6 @@ class Effects
         FIRE = 4,
         POISON = 5,
         ENERGY = 6,
-        BLOOD = 7;
+        BLOOD = 7,
+        WATER = 8;
 }

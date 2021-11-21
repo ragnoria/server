@@ -29,26 +29,35 @@ class PushListener
             }
         }
 
-        if ($this->canPush($fromSQM, $toSQM)) {
-            $toSQM->addItem(array_pop($fromSQM->stack));
+        if (!$this->canPush($fromSQM, $toSQM)) {
+            return;
+        }
 
-            foreach (World::getNearbyPlayers($fromSQM) as $player) {
-                $player->sendEvent(Events::UPDATE_SQM, [
-                    'x' => $fromSQM->x,
-                    'y' => $fromSQM->y,
-                    'z' => $fromSQM->z,
-                    'stack' => $fromSQM->stack,
-                ]);
-            }
+        $toSQMinitialStack = $toSQM->stack;
+        $toSQM->addItem(array_pop($fromSQM->stack));
 
-            foreach (World::getNearbyPlayers($toSQM) as $player) {
-                $player->sendEvent(Events::UPDATE_SQM, [
-                    'x' => $toSQM->x,
-                    'y' => $toSQM->y,
-                    'z' => $toSQM->z,
-                    'stack' => $toSQM->stack,
-                ]);
+        foreach ($toSQMinitialStack as $item) {
+            if ($action = config('ragnoria.actions.throw-on')[$item->id] ?? null) {
+                $action::handle($event, $item);
             }
+        }
+
+        foreach (World::getNearbyPlayers($fromSQM) as $player) {
+            $player->sendEvent(Events::UPDATE_SQM, [
+                'x' => $fromSQM->x,
+                'y' => $fromSQM->y,
+                'z' => $fromSQM->z,
+                'stack' => $fromSQM->stack,
+            ]);
+        }
+
+        foreach (World::getNearbyPlayers($toSQM) as $player) {
+            $player->sendEvent(Events::UPDATE_SQM, [
+                'x' => $toSQM->x,
+                'y' => $toSQM->y,
+                'z' => $toSQM->z,
+                'stack' => $toSQM->stack,
+            ]);
         }
     }
 

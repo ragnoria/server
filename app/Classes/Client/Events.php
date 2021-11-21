@@ -5,16 +5,16 @@ namespace App\Classes\Client;
 class Events
 {
     const
-        AUTH = 'App.authorization',
-        PONG = 'Libs_UI.Ping.pull',
-        LOG = 'Libs_Console.addLog',
-        CONFIRM_STEP = 'Libs_Movement.confirmStep',
-        RUN_EFFECT = 'App.runEffect',
-        UPDATE_SQM = 'Libs_Board.updateSQM',
-        SEND_MESSAGE = 'Libs_Chat.prepareMessage',
-        UPDATE_POSITION = 'Libs_Movement.updatePosition',
-        PLAYER_MOVE = 'Libs_Player.move',
-        PLAYER_REMOVE = 'Libs_Player.remove',
-        PLAYER_ROTATE = 'Libs_Player.rotate',
-        PLAYER_HURT = 'Libs_Player.hurt';
+        AUTH = 'auth',
+        PONG = 'pong',
+        LOG = 'log',
+        CONFIRM_STEP = 'confirm-step',
+        RUN_EFFECT = 'run-effect',
+        UPDATE_SQM = 'update-sqm',
+        SEND_MESSAGE = 'send-message',
+        UPDATE_POSITION = 'update-position',
+        PLAYER_MOVE = 'player-move',
+        PLAYER_REMOVE = 'player-remove',
+        PLAYER_ROTATE = 'player-rotate',
+        PLAYER_HURT = 'player-hurt';
 }

@@ -8,8 +8,8 @@ return [
     ],
 
     'respawn' => [
-        'x' => 5000,
-        'y' => 5000,
+        'x' => 5018,
+        'y' => 5001,
         'z' => 0
     ],
 
@@ -30,6 +30,10 @@ return [
     ],
 
     'actions' => [
+        'use' => [
+            7 => \App\Classes\Actions\UseStreetLamp::class,
+            8 => \App\Classes\Actions\UseStreetLamp::class
+        ],
         'walk-on' => [
             5 => \App\Classes\Actions\WalkOnPoisonField::class,
             9 => \App\Classes\Actions\WalkOnEnergyField::class,
@@ -39,10 +43,10 @@ return [
         'walk-out' => [
             13 => \App\Classes\Actions\WalkOutTrap::class,
         ],
-        'use' => [
-            7 => \App\Classes\Actions\UseStreetLamp::class,
-            8 => \App\Classes\Actions\UseStreetLamp::class
-        ],
+        'throw-on' => [
+            28 => \App\Classes\Actions\ThrowOnWater::class,
+            69 => \App\Classes\Actions\ThrowOnLava::class
+         ]
     ]
 
 ];

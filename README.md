@@ -55,3 +55,5 @@ Such notation means: when any creature `walk on` item with id `5` server will tr
 Types of actions available so far:
 - use
 - walk-on
+- walk-out
+- throw-on

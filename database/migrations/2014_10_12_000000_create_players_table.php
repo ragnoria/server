@@ -22,7 +22,8 @@ class CreatePlayersTable extends Migration
             $table->integer('x');
             $table->integer('y');
             $table->integer('z');
-            $table->string('ip', 40)->nullable();
+            $table->string('token', 64)->nullable();
+            $table->string('ip', 64)->nullable();
             $table->timestamps();
         });
     }

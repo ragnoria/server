@@ -15,10 +15,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
 
     public function onOpen(ConnectionInterface $conn)
     {
-        if (ConnectionService::authorize($conn)) {
-            $conn->player->login();
-            Log::info("Player '{$conn->player->name}' logged in. Players online: " . World::$players->count() . ".");
-        } else {
+        if (!ConnectionService::authorize($conn)) {
             $conn->close();
         }
     }
@@ -27,7 +24,6 @@ class WebSocketController extends Controller implements MessageComponentInterfac
     {
         if (!empty($conn->player)) {
             $conn->player->logout();
-            Log::info("Player '{$conn->player->name}' logged out. Players online: " . World::$players->count() . ".");
         }
     }
 

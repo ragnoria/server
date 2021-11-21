@@ -6,6 +6,7 @@ use App\Classes\Client\Effects;
 use App\Classes\Client\Events;
 use App\Classes\Helper;
 use App\Classes\Item;
+use App\Classes\Log;
 use App\Classes\Outfit;
 use App\Classes\SQM;
 use App\Classes\World;
@@ -30,6 +31,7 @@ use Ratchet\ConnectionInterface;
  * @property int $x
  * @property int $y
  * @property int $z
+ * @property string $token
  * @property string $ip
  *
  * @property string $created_at
@@ -59,6 +61,8 @@ class Player extends Model implements CreatureInterface
         World::$players->attach($this);
         event(new PlayerLoggedIn($this));
         event(new WalkedIn($this, $this->getSQM()));
+
+        Log::info("Player '{$this->name}' logged in. Players online: " . World::$players->count() . ".");
     }
 
     public function logout(): void
@@ -68,6 +72,8 @@ class Player extends Model implements CreatureInterface
         event(new WalkedOut($this, $this->getSQM()));
         $this->conn->close();
         $this->save();
+
+        Log::info("Player '{$this->name}' logged out. Players online: " . World::$players->count() . ".");
     }
 
     public function walk(string $direction): void

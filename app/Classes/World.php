@@ -72,7 +72,7 @@ class World
         try {
             $terrain = json_decode(
                 file_get_contents(
-                    resource_path('map/terrain.json')
+                    resource_path('map.json')
                 )
             );
         } catch (\Exception $e) {

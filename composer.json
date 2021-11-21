@@ -12,7 +12,8 @@
         "laravel/framework": "^8.54",
         "laravel/tinker": "^2.5",
         "ext-json": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-gd": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

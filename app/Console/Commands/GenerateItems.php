@@ -21,7 +21,12 @@ class GenerateItems extends Command
         foreach (DB::table('items')->get() as $item) {
             $sprites = [];
             foreach(json_decode($item->sprites) as $sprite) {
-                if (!$img = file_get_contents(resource_path('items/' .$sprite. '.png'))) {
+                $path = resource_path('items/' .$sprite. '.png');
+                if (!file_exists($path)) {
+                    Log::error('Could not load sprite: ' .$sprite);
+                    return;
+                }
+                if (!$img = file_get_contents($path)) {
                     Log::error('Could not load sprite: ' .$sprite);
                     return;
                 }
