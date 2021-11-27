@@ -81,16 +81,26 @@ class Player extends Model implements CreatureInterface
         $fromSQM = $this->getSQM();
         $toSQM = Helper::getSQMAfterMove($this->getSQM(), $direction);
 
-        if ($toSQM && $toSQM->isWalkable()) {
-            $this->x = $toSQM->x;
-            $this->y = $toSQM->y;
-            $this->z = $toSQM->z;
-            $this->direction = $direction;
-
-            event(new PlayerWalked($this, $fromSQM, $toSQM));
-            event(new WalkedOut($this, $fromSQM));
-            event(new WalkedIn($this, $toSQM));
+        if (!$toSQM || !$toSQM->isWalkable()) {
+            $this->sendEvent(Events::UPDATE_POSITION, [
+                'status' => false,
+                'area' => null,
+                'x' => $this->x,
+                'y' => $this->y,
+                'z' => $this->z,
+                'direction' => $this->direction,
+            ]);
+            return;
         }
+
+        $this->x = $toSQM->x;
+        $this->y = $toSQM->y;
+        $this->z = $toSQM->z;
+        $this->direction = $direction;
+
+        event(new PlayerWalked($this, $fromSQM, $toSQM));
+        event(new WalkedOut($this, $fromSQM));
+        event(new WalkedIn($this, $toSQM));
     }
 
     public function teleport(SQM $toSQM): void
@@ -126,10 +136,10 @@ class Player extends Model implements CreatureInterface
 
         if ($power > 0) {
             if ($this->hp <= $power) {
-                $this->hp = 0;
-            } else {
-                $this->hp -= $power;
+                $power = $this->hp;
             }
+
+            $this->hp -= $power;
 
             foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
                 $player->sendEvent(Events::PLAYER_HURT, [
@@ -141,7 +151,7 @@ class Player extends Model implements CreatureInterface
                 ]);
             }
         } else {
-            foreach(World::getNearbyPlayers($this->getSQM()) as $player) {
+            foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
                 $player->sendEvent(Events::RUN_EFFECT, [
                     'id' => Effects::POOF,
                     'x' => $this->x,
@@ -168,6 +178,7 @@ class Player extends Model implements CreatureInterface
             ]);
         }
 
+        $this->sendEvent(Events::DEAD);
         $this->logout();
 
         $this->hp = $this->hp_max;
@@ -213,6 +224,7 @@ class Player extends Model implements CreatureInterface
     {
         return [
             'id' => $this->id,
+            'role' => $this->role,
             'name' => $this->name,
             'hp' => $this->hp,
             'hp_max' => $this->hp_max,

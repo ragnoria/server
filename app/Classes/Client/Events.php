@@ -16,5 +16,6 @@ class Events
         PLAYER_MOVE = 'player-move',
         PLAYER_REMOVE = 'player-remove',
         PLAYER_ROTATE = 'player-rotate',
-        PLAYER_HURT = 'player-hurt';
+        PLAYER_HURT = 'player-hurt',
+        DEAD = 'dead';
 }

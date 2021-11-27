@@ -34,6 +34,7 @@ class PlayerTeleportedListener
                 'z' => $event->player->z
             ]);
         }
+
         foreach ($playersOnAreaBeforeStep as $player) if ($player !== $event->player) {
             if (!in_array($player, $playersStillOnArea)) {
                 $player->sendEvent(Events::PLAYER_REMOVE, [
@@ -44,8 +45,9 @@ class PlayerTeleportedListener
                 ]);
             }
         }
+
         $event->player->sendEvent(Events::UPDATE_POSITION, [
-            'status' => 'success',
+            'status' => true,
             'area' => $event->player->getArea(),
             'x' => $event->player->x,
             'y' => $event->player->y,
