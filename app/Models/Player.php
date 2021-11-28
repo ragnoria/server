@@ -3,20 +3,17 @@
 namespace App\Models;
 
 use App\Classes\Client\Effects;
-use App\Classes\Client\Events;
-use App\Classes\Helper;
-use App\Classes\Item;
-use App\Classes\Log;
 use App\Classes\Outfit;
 use App\Classes\SQM;
 use App\Classes\World;
 use App\Classes\WsEventRequest;
-use App\Events\Internal\PlayerLoggedIn;
-use App\Events\Internal\PlayerLoggedOut;
-use App\Events\Internal\PlayerTeleported;
-use App\Events\Internal\PlayerWalked;
-use App\Events\Internal\WalkedIn;
-use App\Events\Internal\WalkedOut;
+use App\Events\Internal\PlayerDie;
+use App\Events\Internal\PlayerHeal;
+use App\Events\Internal\PlayerHurt;
+use App\Events\Internal\PlayerLogin;
+use App\Events\Internal\PlayerLogout;
+use App\Events\Internal\PlayerTeleport;
+use App\Events\Internal\PlayerWalk;
 use App\Interfaces\CreatureInterface;
 use Illuminate\Database\Eloquent\Model;
 use Ratchet\ConnectionInterface;
@@ -58,134 +55,37 @@ class Player extends Model implements CreatureInterface
 
     public function login(): void
     {
-        World::$players->attach($this);
-        event(new PlayerLoggedIn($this));
-        event(new WalkedIn($this, $this->getSQM()));
-
-        Log::info("Player '{$this->name}' logged in. Players online: " . World::$players->count() . ".");
+        event(new PlayerLogin($this));
     }
 
     public function logout(): void
     {
-        World::$players->detach($this);
-        event(new PlayerLoggedOut($this));
-        event(new WalkedOut($this, $this->getSQM()));
-        $this->conn->close();
-        $this->save();
-
-        Log::info("Player '{$this->name}' logged out. Players online: " . World::$players->count() . ".");
+        event(new PlayerLogout($this));
     }
 
     public function walk(string $direction): void
     {
-        $fromSQM = $this->getSQM();
-        $toSQM = Helper::getSQMAfterMove($this->getSQM(), $direction);
-
-        if (!$toSQM || !$toSQM->isWalkable()) {
-            $this->sendEvent(Events::UPDATE_POSITION, [
-                'status' => false,
-                'area' => null,
-                'x' => $this->x,
-                'y' => $this->y,
-                'z' => $this->z,
-                'direction' => $this->direction,
-            ]);
-            return;
-        }
-
-        $this->x = $toSQM->x;
-        $this->y = $toSQM->y;
-        $this->z = $toSQM->z;
-        $this->direction = $direction;
-
-        event(new PlayerWalked($this, $fromSQM, $toSQM));
-        event(new WalkedOut($this, $fromSQM));
-        event(new WalkedIn($this, $toSQM));
+        event(new PlayerWalk($this, $direction));
     }
 
     public function teleport(SQM $toSQM): void
     {
-        if (!$toSQM->hasGround()) {
-            return;
-        }
-
-        $fromSQM = $this->getSQM();
-        $this->x = $toSQM->x;
-        $this->y = $toSQM->y;
-        $this->z = $toSQM->z;
-
-        event(new PlayerTeleported($this, $fromSQM, $toSQM));
-        event(new WalkedOut($this, $fromSQM));
-        event(new WalkedIn($this, $toSQM));
+        event(new PlayerTeleport($this, $toSQM));
     }
 
-    public function heal(int $power): void
+    public function hurt(int $power, int $effect = Effects::BLOOD): void
     {
-        if ($this->hp_max <= $this->hp + $power) {
-            $this->hp = $this->hp_max;
-        } else {
-            $this->hp += $power;
-        }
+        event(new PlayerHurt($this, $power, $effect));
     }
 
-    public function hurt(int $power, string $effect = Effects::FIRE): void
+    public function heal(int $power, int $effect = null): void
     {
-        if ($this->hasPermissions(Player::ROLE_GAMEMASTER)) {
-            $power = 0;
-        }
-
-        if ($power > 0) {
-            if ($this->hp <= $power) {
-                $power = $this->hp;
-            }
-
-            $this->hp -= $power;
-
-            foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
-                $player->sendEvent(Events::PLAYER_HURT, [
-                    'player_id' => $this->id,
-                    'power' => $power,
-                    'effect' => $effect,
-                    'hp' => $this->hp,
-                    'hp_max' => $this->hp_max,
-                ]);
-            }
-        } else {
-            foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
-                $player->sendEvent(Events::RUN_EFFECT, [
-                    'id' => Effects::POOF,
-                    'x' => $this->x,
-                    'y' => $this->y,
-                    'z' => $this->z
-                ]);
-            }
-        }
-
-        if ($this->hp === 0) {
-            $this->die();
-        }
+        event(new PlayerHeal($this, $power, $effect));
     }
 
     public function die(): void
     {
-        $this->getSQM()->addItem(new Item(11, 1));
-        foreach (World::getNearbyPlayers($this->getSQM()) as $player) {
-            $player->sendEvent(Events::UPDATE_SQM, [
-                'x' => $this->x,
-                'y' => $this->y,
-                'z' => $this->z,
-                'stack' => $this->getSQM()->stack,
-            ]);
-        }
-
-        $this->sendEvent(Events::DEAD);
-        $this->logout();
-
-        $this->hp = $this->hp_max;
-        $this->x = config('ragnoria.respawn.x');
-        $this->y = config('ragnoria.respawn.y');
-        $this->z = config('ragnoria.respawn.z');
-        $this->save();
+        event(new PlayerDie($this));
     }
 
     public function hasPermissions($role): bool

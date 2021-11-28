@@ -5,13 +5,24 @@ namespace App\Listeners\Internal;
 use App\Classes\Client\Effects;
 use App\Classes\Client\Events;
 use App\Classes\World;
-use App\Events\Internal\PlayerTeleported;
+use App\Events\Internal\PlayerTeleport;
+use App\Events\Internal\WalkedIn;
+use App\Events\Internal\WalkedOut;
 
-class PlayerTeleportedListener
+class PlayerTeleportListener
 {
-    public function handle(PlayerTeleported $event)
+    public function handle(PlayerTeleport $event)
     {
-        $playersOnAreaBeforeStep = World::getNearbyPlayers($event->fromSQM);
+        if (!$event->toSQM->hasGround()) {
+            return;
+        }
+
+        $fromSQM = $event->player->getSQM();
+        $event->player->x = $event->toSQM->x;
+        $event->player->y = $event->toSQM->y;
+        $event->player->z = $event->toSQM->z;
+
+        $playersOnAreaBeforeStep = World::getNearbyPlayers($fromSQM);
         $playersStillOnArea = [];
         foreach (World::getNearbyPlayers($event->toSQM) as $player) {
             if ($player !== $event->player) {
@@ -54,5 +65,8 @@ class PlayerTeleportedListener
             'z' => $event->player->z,
             'direction' => $event->player->direction,
         ]);
+
+        event(new WalkedOut($event->player, $fromSQM));
+        event(new WalkedIn($event->player, $event->toSQM));
     }
 }

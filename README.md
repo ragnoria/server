@@ -1,6 +1,6 @@
 # Ragnoria server
 
-### Client-Server communication
+## Client-Server communication
 
 The data exchange format is identical on both sides: server expects and emits websocket messages in json format with the following
 structure:
@@ -14,25 +14,29 @@ structure:
 }
 ```
 
-### Events:
+## Events & Listeners:
 
 Events in application are divided into 'internal events' and 'websocket events'. Internal events can not be triggered through websocket message.
+
+#### Events
+
 - Internal events are located in `/app/Events/Internal`.
 - Websocket events are located in `/app/Events/Websockets`.
 - WebSocket event classes must be added to list of supported websocket events in `/config/ragnoria.php` under `events` key.
 
-### Listeners:
+#### Listeners:
 
 - Internal listeners are located in `/app/Listeners/Internal`.
 - Websocket listeners are located in `/app/Listeners/Websockets`.
 - Event-Listener mappings are located in `EventServiceProvider` in `$listen` property.
 
-### In-game commands:
+## In-game commands:
 
 All in-game commands are handled by own class located in `/app/Classes/Commands`.
 Commands are assigned to application in `/config/ragnoria.php` under `commands` key.
 
-### In-game actions:
+
+## In-game actions:
 
 All in-game actions are handled by own class located in `/app/Classes/Actions`.
 Actions are assigned to application in `/config/ragnoria.php` under `actions` key in a following structure:

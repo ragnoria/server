@@ -5,7 +5,7 @@ namespace App\Events\Internal;
 use App\Models\Player;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class PlayerLoggedIn
+class PlayerLogin
 {
     use Dispatchable;
 

@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use App\Events\Internal\PlayerLoggedIn;
-use App\Events\Internal\PlayerLoggedOut;
-use App\Events\Internal\PlayerTeleported;
-use App\Events\Internal\PlayerWalked;
+use App\Events\Internal\PlayerDie;
+use App\Events\Internal\PlayerHeal;
+use App\Events\Internal\PlayerHurt;
+use App\Events\Internal\PlayerLogin;
+use App\Events\Internal\PlayerLogout;
+use App\Events\Internal\PlayerTeleport;
+use App\Events\Internal\PlayerWalk;
 use App\Events\Internal\WalkedIn;
 use App\Events\Internal\WalkedOut;
 use App\Events\Websockets\Ping;
@@ -14,10 +17,13 @@ use App\Events\Websockets\Rotate;
 use App\Events\Websockets\Say;
 use App\Events\Websockets\UseItem;
 use App\Events\Websockets\Walk;
-use App\Listeners\Internal\PlayerLoggedInListener;
-use App\Listeners\Internal\PlayerLoggedOutListener;
-use App\Listeners\Internal\PlayerTeleportedListener;
-use App\Listeners\Internal\PlayerWalkedListener;
+use App\Listeners\Internal\PlayerDieListener;
+use App\Listeners\Internal\PlayerHealListener;
+use App\Listeners\Internal\PlayerHurtListener;
+use App\Listeners\Internal\PlayerLoginListener;
+use App\Listeners\Internal\PlayerLogoutListener;
+use App\Listeners\Internal\PlayerTeleportListener;
+use App\Listeners\Internal\PlayerWalkListener;
 use App\Listeners\Internal\WalkedInListener;
 use App\Listeners\Internal\WalkedOutListener;
 use App\Listeners\Websockets\PingListener;
@@ -47,10 +53,13 @@ class EventServiceProvider extends ServiceProvider
         UseItem::class => [UseItemListener::class],
 
         // internal
-        PlayerLoggedIn::class => [PlayerLoggedInListener::class],
-        PlayerLoggedOut::class => [PlayerLoggedOutListener::class],
-        PlayerTeleported::class => [PlayerTeleportedListener::class],
-        PlayerWalked::class => [PlayerWalkedListener::class],
+        PlayerLogin::class => [PlayerLoginListener::class],
+        PlayerLogout::class => [PlayerLogoutListener::class],
+        PlayerHurt::class => [PlayerHurtListener::class],
+        PlayerHeal::class => [PlayerHealListener::class],
+        PlayerDie::class => [PlayerDieListener::class],
+        PlayerTeleport::class => [PlayerTeleportListener::class],
+        PlayerWalk::class => [PlayerWalkListener::class],
         WalkedIn::class => [WalkedInListener::class],
         WalkedOut::class => [WalkedOutListener::class],
     ];

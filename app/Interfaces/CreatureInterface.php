@@ -15,7 +15,7 @@ interface CreatureInterface
 
     public function heal(int $power): void;
 
-    public function hurt(int $power, string $effect = Effects::FIRE): void;
+    public function hurt(int $power, int $effect = Effects::FIRE): void;
 
     public function die();
 }
