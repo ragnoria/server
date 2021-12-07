@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use App\Models\Item;
+
 class SQM
 {
     public int $x;

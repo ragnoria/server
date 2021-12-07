@@ -3,8 +3,8 @@
 namespace App\Classes\Actions;
 
 use App\Classes\Client\Effects;
-use App\Classes\Item;
 use App\Events\Internal\WalkedIn;
+use App\Models\Item;
 
 class WalkOnEnergyField
 {

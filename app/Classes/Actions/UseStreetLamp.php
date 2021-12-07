@@ -3,9 +3,9 @@
 namespace App\Classes\Actions;
 
 use App\Classes\Client\Events;
-use App\Classes\Item;
 use App\Classes\World;
 use App\Events\Websockets\UseItem;
+use App\Models\Item;
 
 class UseStreetLamp
 {

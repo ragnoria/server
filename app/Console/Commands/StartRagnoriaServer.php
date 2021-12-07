@@ -16,7 +16,7 @@ class StartRagnoriaServer extends Command
     protected $signature = 'ragnoria:serve';
 
     protected $description = 'Start ragnoria server';
-    
+
 
     public function handle()
     {

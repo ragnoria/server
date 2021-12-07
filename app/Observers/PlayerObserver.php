@@ -2,8 +2,9 @@
 
 namespace App\Observers;
 
-use App\Classes\Outfit;
+use App\Models\Outfit;
 use App\Models\Player;
+use App\Models\State;
 
 
 class PlayerObserver
@@ -13,6 +14,7 @@ class PlayerObserver
         $player->direction = 'South';
         $player->speed = 10;
         $player->outfit = new Outfit();
+
 
         if ($player->role == Player::ROLE_GAMEMASTER) {
             $player->speed = 40;
@@ -25,6 +27,8 @@ class PlayerObserver
             $player->outfit->secondary = '#ff0000';
             $player->outfit->details = '#ffc100';
         }
+
+        $player->state = new State();
     }
 
 }

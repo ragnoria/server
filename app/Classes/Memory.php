@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-class Memory
+abstract class Memory
 {
 
     public static function info(): string

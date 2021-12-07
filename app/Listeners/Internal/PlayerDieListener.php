@@ -3,11 +3,11 @@
 namespace App\Listeners\Internal;
 
 use App\Classes\Client\Events;
-use App\Classes\Item;
 use App\Classes\Log;
 use App\Classes\World;
 use App\Events\Internal\PlayerDie;
 use App\Events\Internal\WalkedOut;
+use App\Models\Item;
 
 class PlayerDieListener
 {

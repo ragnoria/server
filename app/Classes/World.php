@@ -2,9 +2,10 @@
 
 namespace App\Classes;
 
+use App\Models\Item;
 use App\Models\Player;
 
-class World
+abstract class World
 {
     private static array $grid;
 

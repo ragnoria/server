@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-class Log
+abstract class Log
 {
     const
         TEXT_BLACK = '0;30',

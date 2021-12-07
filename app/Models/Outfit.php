@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Classes;
+namespace App\Models;
+
+use App\Classes\Helper;
 
 class Outfit
 {

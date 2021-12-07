@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Classes\Client\Effects;
-use App\Classes\Outfit;
 use App\Classes\SQM;
 use App\Classes\World;
 use App\Classes\WsEventRequest;
@@ -44,6 +43,8 @@ class Player extends Model implements CreatureInterface
     public ConnectionInterface $conn;
 
     public Outfit $outfit;
+
+    public State $state;
 
     public string $direction;
 
