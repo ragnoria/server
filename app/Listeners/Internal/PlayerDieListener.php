@@ -8,11 +8,16 @@ use App\Classes\World;
 use App\Events\Internal\PlayerDie;
 use App\Events\Internal\WalkedOut;
 use App\Models\Item;
+use App\Models\State;
 
 class PlayerDieListener
 {
     public function handle(PlayerDie $event)
     {
+        // remove states
+        $event->player->state->setTicks(State::BURNING, 0);
+        $event->player->state->setTicks(State::POISONED, 0);
+
         // add corpse
         $event->player->getSQM()->addItem(new Item(11, 1));
         foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) {

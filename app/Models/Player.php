@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Classes\Client\Effects;
+use App\Classes\Client\Events;
+use App\Classes\Helper;
 use App\Classes\SQM;
 use App\Classes\World;
 use App\Classes\WsEventRequest;
@@ -127,8 +129,7 @@ class Player extends Model implements CreatureInterface
             'id' => $this->id,
             'role' => $this->role,
             'name' => $this->name,
-            'hp' => $this->hp,
-            'hp_max' => $this->hp_max,
+            'hp_percent' => Helper::toPercent($this->hp, $this->hp_max),
             'x' => $this->x,
             'y' => $this->y,
             'z' => $this->z,
@@ -136,6 +137,15 @@ class Player extends Model implements CreatureInterface
             'speed' => $this->speed,
             'outfit' => $this->outfit->toArray(),
         ];
+    }
+
+    public function sendUpdateStatus(): void
+    {
+        $this->sendEvent(Events::STATUS_UPDATE, [
+            'hp' => $this->hp,
+            'hp_max' => $this->hp_max,
+            'state' => $this->state->toArray(),
+        ]);
     }
 
     public function sendEvent(string $event, array $data = []): void

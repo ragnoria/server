@@ -17,5 +17,6 @@ class Events
         PLAYER_REMOVE = 'player-remove',
         PLAYER_ROTATE = 'player-rotate',
         PLAYER_HURT = 'player-hurt',
-        DEAD = 'dead';
+        DEAD = 'dead',
+        STATUS_UPDATE = 'status-update';
 }

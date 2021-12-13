@@ -4,6 +4,7 @@ namespace App\Classes\Actions;
 
 use App\Classes\Client\Effects;
 use App\Classes\Loop;
+use App\Classes\World;
 use App\Events\Internal\WalkedIn;
 use App\Models\Item;
 use App\Models\State;
@@ -15,6 +16,10 @@ class WalkOnPoisonField
     {
         if (!$event->creature->state->is(State::POISONED)) {
             Loop::addPeriodicTimer(4, function (TimerInterface $timer) use ($event) {
+                if (!World::$players->contains($event->creature)) {
+                    Loop::cancelTimer($timer);
+                    return;
+                }
                 if ($event->creature->state->is(State::POISONED)) {
                     $event->creature->hurt($event->creature->state->getTicks(State::POISONED), Effects::POISON);
                     $event->creature->state->tick(State::POISONED);
@@ -22,10 +27,11 @@ class WalkOnPoisonField
                 if (!$event->creature->state->is(State::POISONED)) {
                     Loop::cancelTimer($timer);
                 }
+                $event->creature->sendUpdateStatus();
             });
         }
 
-        $event->creature->hurt(10, Effects::POISON);
         $event->creature->state->setTicks(State::POISONED, 9);
+        $event->creature->hurt(10, Effects::POISON);
     }
 }

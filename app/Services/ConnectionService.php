@@ -25,6 +25,7 @@ class ConnectionService
                 $splPlayer->update(['token' => uniqid("", true)]);
                 $conn->player = $splPlayer;
                 self::sendPass($splPlayer);
+                $splPlayer->sendUpdateStatus();
 
                 return true;
             }
@@ -53,6 +54,7 @@ class ConnectionService
         self::sendPass($player);
 
         $player->login();
+        $player->sendUpdateStatus();
 
         return true;
     }
