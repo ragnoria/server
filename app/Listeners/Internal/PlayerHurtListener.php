@@ -4,6 +4,7 @@ namespace App\Listeners\Internal;
 
 use App\Classes\Client\Effects;
 use App\Classes\Client\Events;
+use App\Classes\Helper;
 use App\Classes\World;
 use App\Events\Internal\PlayerHurt;
 use App\Models\Player;
@@ -20,16 +21,20 @@ class PlayerHurtListener
             if ($event->player->hp <= $event->power) {
                 $event->power = $event->player->hp;
             }
-
             $event->player->hp -= $event->power;
+
+            $event->player->sendEvent(Events::STATUS_UPDATE, [
+                'hp' => $event->player->hp,
+                'hp_max' => $event->player->hp_max,
+                'state' => $event->player->state->toArray(),
+            ]);
 
             foreach (World::getNearbyPlayers($event->player->getSQM()) as $player) {
                 $player->sendEvent(Events::PLAYER_HURT, [
                     'player_id' => $event->player->id,
                     'power' => $event->power,
                     'effect' => $event->effect,
-                    'hp' => $event->player->hp,
-                    'hp_max' => $event->player->hp_max,
+                    'hp_percent' => Helper::toPercent($event->player->hp, $event->player->hp_max),
                 ]);
             }
         } else {

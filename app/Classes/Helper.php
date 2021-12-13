@@ -6,6 +6,11 @@ use App\Interfaces\CreatureInterface;
 
 class Helper
 {
+    static function toPercent(int $a, int $b): int
+    {
+        return (int) (($a / $b) * 100);
+    }
+
     static function inRange(CreatureInterface $creature, SQM $sqm, $radius = 1): bool
     {
         return (abs($sqm->x - $creature->x) <= $radius && abs($sqm->y - $creature->y) <= $radius && $sqm->z == $creature->z);

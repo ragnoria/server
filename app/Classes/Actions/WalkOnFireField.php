@@ -22,10 +22,11 @@ class WalkOnFireField
                 if (!$event->creature->state->is(State::BURNING)) {
                     Loop::cancelTimer($timer);
                 }
+                $event->creature->sendUpdateStatus();
             });
         }
 
-        $event->creature->hurt(20, Effects::FIRE);
         $event->creature->state->setTicks(State::BURNING, 10);
+        $event->creature->hurt(20, Effects::FIRE);
     }
 }

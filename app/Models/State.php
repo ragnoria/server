@@ -46,4 +46,15 @@ class State
         return $this->ticks[$state] ?? 0;
     }
 
+    public function toArray(): array
+    {
+        foreach([self::BURNING, self::POISONED] as $state) {
+            if (self::is($state)) {
+                $result[] = $state;
+            }
+        }
+
+        return $result ?? [];
+    }
+
 }

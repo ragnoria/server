@@ -22,10 +22,11 @@ class WalkOnPoisonField
                 if (!$event->creature->state->is(State::POISONED)) {
                     Loop::cancelTimer($timer);
                 }
+                $event->creature->sendUpdateStatus();
             });
         }
 
-        $event->creature->hurt(10, Effects::POISON);
         $event->creature->state->setTicks(State::POISONED, 9);
+        $event->creature->hurt(10, Effects::POISON);
     }
 }
